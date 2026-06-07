@@ -1,5 +1,10 @@
 # LLM Gateway 🚀
 
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Gemini](https://img.shields.io/badge/Gemini-API-orange)
+![Rate Limiting](https://img.shields.io/badge/Rate_Limiting-20_req%2Fmin-red)
+![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-Telemetry-blueviolet)
+
 A production-ready **LLM Gateway** that acts as a smart proxy between your application and LLM providers (currently Gemini). Every request passes through a full middleware pipeline: rate limiting → budget control → circuit breaker → provider fallback → telemetry logging.
 
 ---
@@ -144,6 +149,71 @@ Every request appends a JSON line to `logs/requests.jsonl`:
 ```
 
 ---
+
+## 🎬 Demo
+
+```
+$ python main.py
+
+=================================================================
+  🚀  LLM GATEWAY — Test Senaryoları
+=================================================================
+
+=================================================================
+  SENARYO 1: Normal İstek
+=================================================================
+✓  Yanıt alındı!
+   Provider  : gemini
+   Model     : gemini-flash-latest
+   Tokens    : 402 (in=15, out=387)
+   Maliyet   : $0.000117
+   Gecikme   : 5806ms
+   Bütçe (team_alpha): $0.000232 / $5.00 (%0.00 kullanım)
+
+=================================================================
+  SENARYO 2: Rate Limit Testi (25 hızlı istek)
+=================================================================
+   [01/25] ✅ İzin verildi
+   [02/25] ✅ İzin verildi
+   [03/25] ✅ İzin verildi
+   [...] (istekler kabul ediliyor...)
+   [20/25] ✅ İzin verildi
+   [21/25] ❌ 429 Rate Limit — Kullanıcı 'user_spammer' limiti aştı (20/dk)
+   [22/25] ❌ 429 Rate Limit — 60 saniye sonra tekrar deneyin.
+   [23/25] ❌ 429 Rate Limit — 60 saniye sonra tekrar deneyin.
+   [...] (sonraki istekler de 429 alıyor...)
+
+   ✅ Kabul edilen : 20/25
+   ❌ 429 Reddedilen: 5/25 — TEST BAŞARILI
+
+=================================================================
+  SENARYO 3: Bütçe Testi (team_beta — $0.001 limit)
+=================================================================
+   1. İstek → ✅ Başarılı | Maliyet: $0.000003
+   (Bütçe manuel olarak aşıldı — test için)
+   2. İstek → ✅ DOĞRU! 402 Bütçe Aşımı ile reddedildi.
+
+=================================================================
+  📊 TELEMETRİ ÖZETİ
+=================================================================
+   Toplam İstek  : 4
+   Başarılı      : 3  |  Başarısız: 1
+   Başarı Oranı  : %75.0
+   Toplam Maliyet: $0.000235
+   Ort. Gecikme  : 4066.4ms
+
+$ python tests/test_gateway.py
+
+[test_rate_limit_user]         ✅ PASS — 20 kabul, 5 × 429
+[test_rate_limit_ip]           ✅ PASS — IP limiti aşımında 429
+[test_budget_exceeded]         ✅ PASS — Bütçe aşımında 402
+[test_budget_deduction]        ✅ PASS — $0.00042 düşüldü
+[test_circuit_breaker_opens]   ✅ PASS — 3 hata → devre açıldı, 503
+[test_circuit_breaker_half_open] ✅ PASS — HALF_OPEN → CLOSED
+[test_circuit_breaker_success] ✅ PASS — Başarılı istek sayacı sıfırladı
+
+Sonuç: 7 PASS | 0 FAIL | Toplam: 7
+```
 
 ## 🛠 Technologies Used
 
