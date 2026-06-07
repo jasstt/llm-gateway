@@ -1,0 +1,17 @@
+{
+  "team_alpha": {
+    "budget_usd": 5.0,
+    "spent_usd": 0.00023235,
+    "description": "Alpha takÄ±mÄ± â€” geliÅŸtirme ortamÄ±"
+  },
+  "team_beta": {
+    "budget_usd": 0.001,
+    "spent_usd": 0.0,
+    "description": "Beta takÄ±mÄ± â€” kasÄ±tlÄ± dÃ¼ÅŸÃ¼k limit (bÃ¼tÃ§e testi iÃ§in)"
+  },
+  "team_gamma": {
+    "budget_usd": 50.0,
+    "spent_usd": 0.0,
+    "description": "Gamma takÄ±mÄ± â€” Ã¼retim ortamÄ±"
+  }
+}

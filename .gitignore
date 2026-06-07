@@ -1,0 +1,24 @@
+# API key — asla commit etme!
+.env
+
+# Telemetry logları
+logs/
+
+# Python önbelleği
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
